@@ -349,7 +349,8 @@ def assertion_consumer_service(request,
     logger.debug("User %s authenticated via SSO.", user)
 
     logger.debug('Sending the post_authenticated signal')
-    post_authenticated.send_robust(sender=user, session_info=session_info)
+    #post_authenticated.send_robust(sender=user, session_info=session_info)  # https://github.com/knaperek/djangosaml2/issues/117
+    post_authenticated.send_robust(sender=user.__class__, instance=user, session_info=session_info, request=request)
 
     # redirect the user to the view where he came from
     default_relay_state = get_custom_setting('ACS_DEFAULT_REDIRECT_URL',
